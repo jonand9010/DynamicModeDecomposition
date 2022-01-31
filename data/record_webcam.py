@@ -7,19 +7,26 @@ class WebcamImage:
         pass
 
     def record_image(self):
-        self.camera = cv2.VideoCapture(0)
+        
+        camera = cv2.VideoCapture(0)
         time.sleep(2)
-        ret,frame = self.camera.read() # returns a single frame as reference
+        ret,frame = camera.read() # returns a single frame as reference
         self.image = frame
+        camera.release()
 
     def get_grayscale(self):
+
         self.grayscale = cv2.cvtColor(self.image, cv2.COLOR_BGR2GRAY)
 
+    def downsample(self, image, scale):
+        
+        width = int(image.shape[1] * scale )
+        height = int(image.shape[0] * scale)
+        dim = (width, height)
 
-webcam = WebcamImage()
-webcam.record_image()
-webcam.get_grayscale()
+        resized = cv2.resize(image, dim, interpolation = cv2.INTER_AREA)
+        
+        return resized
 
-import matplotlib.pyplot as plt
-plt.imshow(webcam.grayscale)
-plt.show()
+
+
